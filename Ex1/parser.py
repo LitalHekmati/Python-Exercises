@@ -18,8 +18,8 @@ class Expression(ABC):
 class BinaryExpression(Expression):
     @abstractmethod
     def __init__(self, left, right):
-        self.left = super()
-        self.right = super()
+        self.left = Expression
+        self.right = Expression
         pass
 
 class Num(Expression):

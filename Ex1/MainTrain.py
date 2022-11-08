@@ -1,6 +1,6 @@
-from parser import *
 import random
 import string
+from parser import *
 
 a = Num(random.randint(-100,100))
 b = Num(random.randint(-100,100))
