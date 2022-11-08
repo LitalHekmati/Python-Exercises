@@ -3,7 +3,6 @@ from inspect import stack
 from operator import is_not
 from tokenize import Double
 from turtle import left, right
-from numpy import double
 from abc import ABC,abstractmethod
 from queue import Empty, Queue
 import math
@@ -11,77 +10,76 @@ import math
 
 class Expression(ABC):
     @abstractmethod
-    def calc(self)->double:
+    def calc(self)->Double:
         pass
-
 
 # implement the classes here
 
 class BinaryExpression(Expression):
     @abstractmethod
     def __init__(self, left, right):
-        self.left = left
-        self.right = right
+        self.left = super()
+        self.right = super()
+        pass
 
 class Num(Expression):
     def __init__(self, val):
         self.val = val
     def setVal(self,val):
         self.val=val
-    def calc(self) -> double:
+    def calc(self) -> Double:
         return self.val
 
 class Plus(BinaryExpression):
     def __init__(self, left, right):
-        self.left = left
-        self.right = right
-    def calc(self) -> double:
+        super().__init__(left,right)
+    def calc(self) -> Double:
         return left.calc() + right.calc()
     
 class Minus(BinaryExpression):
     def __init__(self, left, right):
         self.left = left
         self.right = right
-    def calc(self) -> double:
+    def calc(self) -> Double:
         return left.calc() - right.calc()
     
 class Mul(BinaryExpression):
     def __init__(self, left, right):
         self.left = left
         self.right = right
-    def calc(self) -> double:
+    def calc(self) -> Double:
         return left.calc() * right.calc()
 
 class Div(BinaryExpression):
     def __init__(self, left, right):
         self.left = left
         self.right = right
-    def calc(self) -> double:
+    def calc(self) -> Double:
         return left.calc() / right.calc()
 
 
 #implement the parser function here
-def parser(expression)->double:
+def parser(expression)->Double:
     q = Queue(100)
     stack1 = []
     stackExp = []
     splitExp = expression.split("(?<=[-+*/()])|(?=[-+*/()])")
 
     for s in splitExp:
-        if isinstance(s, double):
+        if isinstance(s, Double):
             q.put(s)
         else:
-            if s is "/" or "*" or "(":
+            if s=="/" or s=="*" or s=="(":
                 stack1.append(s)
                 break
 
-            elif s is "-" or "+":
-                while not stack1 and stack1[-1] is not "(":
+            elif s=="-" or s=="+":
+                while not stack1 and stack1[0]!="(":
                     q.put(stack1.pop)
                 stack1.append(s)
                 break
-            elif s is ")":
-                while stack1[-1] is not "(":
+            elif s==")":
+                while stack1[0]!="(":
                     q.put(stack1.pop)
                 stack1.pop
                 break
@@ -90,22 +88,22 @@ def parser(expression)->double:
         q.put(stack1.pop)
 
     for s2 in q:
-        if isinstance(s2, double):
+        if isinstance(s2, Double):
             stackExp.append(Num(float(s2)))
         else:
             right1 = stackExp.pop
             left1 = stackExp.pop
-            if s2 is "/":
+            if s2=="/":
                 stackExp.append(Div(left1, right1))
                 break
-            elif s2 is "*":
+            elif s2=="*":
                 stackExp.append(Mul(left1, right1))
                 break
-            elif s2 is "+":
+            elif s2=="+":
                 stackExp.append(Plus(left1, right1))
                 break
-            elif s2 is "-":
+            elif s2=="-":
                 stackExp.append(Minus(left1, right1))
                 break
 
-    return double(math.floor((stackExp.pop().calc * 1000)) / 1000);
+    return Double(math.floor((stackExp.pop().calc() * 1000)) / 1000);
