@@ -63,64 +63,49 @@ class Div(BinaryExpression):
 #implement the parser function here
 def parser(expression)->double:
     q = Queue(100)
-    stack = []
-    stackExp = []		
+    stack1 = []
+    stackExp = []
     splitExp = expression.split("(?<=[-+*/()])|(?=[-+*/()])")
 
     for s in splitExp:
         if isinstance(s, double):
             q.put(s)
         else:
-            match s:
-                case "/":
-                    stack.append(s)
-                    break
-                case "*":
-                    stack.append(s)
-                    break
-                case "(":
-                    stack.append(s)
-                    break
-                case "+":
-                    while not stack and stack[-1] is not "(":
-                        q.put(stack.pop)
-                    stack.append(s)
-                    break
-                case "-":
-                    while not stack and stack[-1] is not "(":
-                        q.put(stack.pop)
-                    stack.append(s)
-                    break
-                case ")":
-                    while stack[-1] is not "(":
-                        q.put(stack.pop)
-                    stack.pop
-                    break
-                
-    while not stack:
-        q.put(stack.pop) 
-    
-    for str in q:
-        if isinstance(str, double):
-            stackExp.append(Num(float(str)))
+            if s is "/" or "*" or "(":
+                stack1.append(s)
+                break
+
+            elif s is "-" or "+":
+                while not stack1 and stack1[-1] is not "(":
+                    q.put(stack1.pop)
+                stack1.append(s)
+                break
+            elif s is ")":
+                while stack1[-1] is not "(":
+                    q.put(stack1.pop)
+                stack1.pop
+                break
+
+    while not stack1:
+        q.put(stack1.pop)
+
+    for s2 in q:
+        if isinstance(s2, double):
+            stackExp.append(Num(float(s2)))
         else:
-            right = stackExp.pop
-            left = stackExp.pop
-            match str:
-                case "/":
-                    stackExp.append(Div(left,right))
-                    break
-                case "*":
-                    stackExp.append(Mul(left,right))
-                    break
-                case "+":
-                    stackExp.append(Plus(left,right))
-                    break
-                case "-":
-                    stackExp.append(Minus(left,right))
-                    break
+            right1 = stackExp.pop
+            left1 = stackExp.pop
+            if s2 is "/":
+                stackExp.append(Div(left1, right1))
+                break
+            elif s2 is "*":
+                stackExp.append(Mul(left1, right1))
+                break
+            elif s2 is "+":
+                stackExp.append(Plus(left1, right1))
+                break
+            elif s2 is "-":
+                stackExp.append(Minus(left1, right1))
+                break
 
-
-    return math.floor((stackExp.pop().calc * 1000)) /1000; 
-
-
+    return double(math.floor((stackExp.pop().calc * 1000)) / 1000);
