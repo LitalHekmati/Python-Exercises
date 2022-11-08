@@ -15,71 +15,82 @@ class Expression(ABC):
 
 # implement the classes here
 
-class BinaryExpression(Expression):
+class BinaryExpression(Expression,ABC):
     @abstractmethod
     def __init__(self, left, right):
-        self.left = Expression
-        self.right = Expression
+        self.left = left
+        self.right = right
         pass
+   
 
 class Num(Expression):
-    def __init__(self, val):
+    def __init__(self, val) :
         self.val = val
     def setVal(self,val):
         self.val=val
     def calc(self) -> Double:
         return self.val
 
+
 class Plus(BinaryExpression):
     def __init__(self, left, right):
         super().__init__(left,right)
     def calc(self) -> Double:
-        return left.calc() + right.calc()
+        return self.left.calc() + self.right.calc()
     
 class Minus(BinaryExpression):
     def __init__(self, left, right):
-        self.left = left
-        self.right = right
+        super().__init__(left,right)
     def calc(self) -> Double:
-        return left.calc() - right.calc()
+        return self.left.calc() - self.right.calc()
     
 class Mul(BinaryExpression):
     def __init__(self, left, right):
-        self.left = left
-        self.right = right
+        super().__init__(left,right)
     def calc(self) -> Double:
-        return left.calc() * right.calc()
+        return self.left.calc() * self.right.calc()
 
 class Div(BinaryExpression):
     def __init__(self, left, right):
-        self.left = left
-        self.right = right
+        super().__init__(left,right)
     def calc(self) -> Double:
-        return left.calc() / right.calc()
+        return self.left.calc() / self.right.calc()
+
+
+def isfloat(num):
+    try:
+        float(num)
+        return True
+    except ValueError:
+        return False
+
 
 
 #implement the parser function here
 def parser(expression)->Double:
-    q = Queue(100)
+    q = Queue(1000)
     stack1 = []
     stackExp = []
     splitExp = expression.split("(?<=[-+*/()])|(?=[-+*/()])")
 
+
     for s in splitExp:
-        if isinstance(s, Double):
+        if (isfloat(s)):
             q.put(s)
+            print("first check")
         else:
+            print("first1 check")
             if s=="/" or s=="*" or s=="(":
                 stack1.append(s)
                 break
 
             elif s=="-" or s=="+":
-                while not stack1 and stack1[0]!="(":
+                while not stack1 and stack1[-1]!="(":
                     q.put(stack1.pop)
                 stack1.append(s)
                 break
             elif s==")":
-                while stack1[0]!="(":
+                while stack1[-1]!="(":
                     q.put(stack1.pop)
                 stack1.pop
                 break
@@ -88,7 +99,7 @@ def parser(expression)->Double:
         q.put(stack1.pop)
 
     for s2 in q:
-        if isinstance(s2, Double):
+        if (isfloat(s)):
             stackExp.append(Num(float(s2)))
         else:
             right1 = stackExp.pop
