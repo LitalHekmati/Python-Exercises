@@ -6,6 +6,8 @@ from turtle import left, right
 from abc import ABC,abstractmethod
 from queue import Empty, Queue
 import math
+import re
+
 
 
 class Expression(ABC):
@@ -71,39 +73,50 @@ def parser(expression)->Double:
     q = Queue(1000)
     stack1 = []
     stackExp = []
-    splitExp = expression.split("(?<=[-+*/()])|(?=[-+*/()])")
+    splitExp = re.split("(?<=[-+*/()])|(?=[-+*/()])", expression)
+    print("split is "+splitExp[-1])
+    if(splitExp[-1]==''):
+        splitExp.pop()
+
+    if(splitExp[0]==''):
+        splitExp.pop(0)    
+    print(splitExp)
 
 
+    
     for s in splitExp:
+        print("s is "+s)
         if (isfloat(s)):
             q.put(s)
-            print("first check")
         else:
             print("first1 check")
             if s=="/" or s=="*" or s=="(":
                 stack1.append(s)
-                break
+                
 
-            elif s=="-" or s=="+":
-                while not stack1 and stack1[-1]!="(":
-                    q.put(stack1.pop)
+            if s=="-" or s=="+":
+                print(stack1)
+                while  len(stack1)>0 and (stack1[-1]!="("):
+                    q.put(stack1.pop())
+                    print("+/-")
                 stack1.append(s)
-                break
-            elif s==")":
+                
+            if s==")":
                 while stack1[-1]!="(":
-                    q.put(stack1.pop)
-                stack1.pop
-                break
+                    q.put(stack1.pop())
+                stack1.pop()
+                
 
-    while not stack1:
-        q.put(stack1.pop)
+    while len(stack1)>0:
+        q.put(stack1.pop())
+
 
     for s2 in q:
-        if (isfloat(s)):
+        if (isfloat(s2)):
             stackExp.append(Num(float(s2)))
         else:
-            right1 = stackExp.pop
-            left1 = stackExp.pop
+            right1 = stackExp.pop()
+            left1 = stackExp.pop()
             if s2=="/":
                 stackExp.append(Div(left1, right1))
                 break
