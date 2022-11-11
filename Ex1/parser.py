@@ -70,13 +70,21 @@ def isfloat(num):
 
 def replaceTheMinus(array):
     array1=[]
-    for i in range(len(array)):
+    i=0
+    while i < len(array):
         if array[i]=="-":
-            if(array[i-1]=="(" or i==0):
-                array1.append(array[i+1] * -1)
+            if(i==0 or array[i-1]=="("):
+                array1.append("-"+array[i+1])
+                i=i+1
+            else:
+                array1.append(array[i])
 
         else:
-            array1.append(array[i])
+            array1.append(array[i]) 
+        i=i+1     
+    return array1
+
+
             
                  
 
@@ -94,6 +102,8 @@ def parser(expression)->Double:
     if(splitExp[0]==''):
         splitExp.pop(0)    
 
+    splitExp=replaceTheMinus(splitExp)
+    
 #5*(2+1)
 
 
