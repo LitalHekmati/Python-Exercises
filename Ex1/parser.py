@@ -1,9 +1,9 @@
 from abc import ABC
 from inspect import stack
+from multiprocessing.dummy import Array
 from operator import is_not
 import queue
 from tokenize import Double
-from turtle import left, right
 from abc import ABC,abstractmethod
 from queue import Empty, Queue
 import math
@@ -68,6 +68,19 @@ def isfloat(num):
         return False
 
 
+def replaceTheMinus(array):
+    array1=[]
+    for i in range(len(array)):
+        if array[i]=="-":
+            if(array[i-1]=="(" or i==0):
+                array1.append(array[i+1] * -1)
+
+        else:
+            array1.append(array[i])
+            
+                 
+
+
 
 #implement the parser function here
 def parser(expression)->Double:
@@ -75,31 +88,28 @@ def parser(expression)->Double:
     stack1 = []
     stackExp = []
     splitExp = re.split("(?<=[-+*/()])|(?=[-+*/()])", expression)
-    print("split is "+splitExp[-1])
     if(splitExp[-1]==''):
         splitExp.pop()
 
     if(splitExp[0]==''):
         splitExp.pop(0)    
-    print(splitExp)
 
 #5*(2+1)
-    
+
+
+
+
     for s in splitExp:
-        print("s is "+s)
         if (isfloat(s)):
             q.put(s)
         else:
-            print("first1 check")
             if s=="/" or s=="*" or s=="(":
                 stack1.append(s)
                 
 
             if s=="-" or s=="+":
-                print(stack1)
                 while  len(stack1)>0 and (stack1[-1]!="("):
                     q.put(stack1.pop())
-                    print("+/-")
                 stack1.append(s)
                 
             if s==")":
