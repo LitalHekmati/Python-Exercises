@@ -82,7 +82,7 @@ def parser(expression)->Double:
         splitExp.pop(0)    
     print(splitExp)
 
-
+#5*(2+1)
     
     for s in splitExp:
         print("s is "+s)
@@ -110,7 +110,7 @@ def parser(expression)->Double:
     while len(stack1)>0:
         q.put(stack1.pop())
 
-
+    print(q[0])
     for s2 in q:
         if (isfloat(s2)):
             stackExp.append(Num(float(s2)))
@@ -119,15 +119,15 @@ def parser(expression)->Double:
             left1 = stackExp.pop()
             if s2=="/":
                 stackExp.append(Div(left1, right1))
-                break
-            elif s2=="*":
+                
+            if s2=="*":
                 stackExp.append(Mul(left1, right1))
-                break
-            elif s2=="+":
+                
+            if s2=="+":
                 stackExp.append(Plus(left1, right1))
-                break
-            elif s2=="-":
+                
+            if s2=="-":
                 stackExp.append(Minus(left1, right1))
-                break
+                
 
     return Double(math.floor((stackExp.pop().calc() * 1000)) / 1000);
