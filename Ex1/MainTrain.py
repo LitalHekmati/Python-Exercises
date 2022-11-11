@@ -35,9 +35,15 @@ sb = strf(b.calc())
 sc = strf(c.calc())
 sd = strf(d.calc())
 
-# s = sa+'+'+sb+'*('+sc+'-'+sd+')'
+
+s30="5*(2+1)"
+s = sa+'+'+sb+'*('+sc+'-'+sd+')'
 # if parser(s) != eval(s) :
-#     print("problem with parser (-10)")
+if(parser(s30) !=15):
+    print("problem with parser (-10)")
+
+# stack =["ss","d"]
+# print(stack[-1]!="d")
 
 
 # s = sa+'*'+sa+'+'+sb+'*('+sc+'-'+sd+'+'+sb+')'
