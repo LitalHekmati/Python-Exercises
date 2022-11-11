@@ -38,21 +38,18 @@ sd = strf(d.calc())
 
 s30="5*(2+1)"
 s = sa+'+'+sb+'*('+sc+'-'+sd+')'
-# if parser(s) != eval(s) :
-if(parser(s30) !=15):
+print(eval(s))
+if parser(s) != eval(s) :
     print("problem with parser (-10)")
 
-# stack =["ss","d"]
-# print(stack[-1]!="d")
 
+s = sa+'*'+sa+'+'+sb+'*('+sc+'-'+sd+'+'+sb+')'
+if parser(s) != eval(s) :
+     print("problem with parser (-20)")
 
-# s = sa+'*'+sa+'+'+sb+'*('+sc+'-'+sd+'+'+sb+')'
-# if parser(s) != eval(s) :
-#     print("problem with parser (-20)")
-
-# s = sa+'*('+sa+'+'+sb+'*('+sc+'-'+sd+'+'+sb+'))'
-# if parser(s) != eval(s) :
-#     print("problem with parser (-20)")
+s = sa+'*('+sa+'+'+sb+'*('+sc+'-'+sd+'+'+sb+'))'
+if parser(s) != eval(s) :
+     print("problem with parser (-20)")
 
 
 print("done")

@@ -1,6 +1,7 @@
 from abc import ABC
 from inspect import stack
 from operator import is_not
+import queue
 from tokenize import Double
 from turtle import left, right
 from abc import ABC,abstractmethod
@@ -70,7 +71,7 @@ def isfloat(num):
 
 #implement the parser function here
 def parser(expression)->Double:
-    q = Queue(1000)
+    q = queue.Queue(1000)
     stack1 = []
     stackExp = []
     splitExp = re.split("(?<=[-+*/()])|(?=[-+*/()])", expression)
@@ -110,13 +111,18 @@ def parser(expression)->Double:
     while len(stack1)>0:
         q.put(stack1.pop())
 
-    print(q[0])
-    for s2 in q:
+    for s2 in q.queue:
         if (isfloat(s2)):
             stackExp.append(Num(float(s2)))
         else:
             right1 = stackExp.pop()
-            left1 = stackExp.pop()
+            if(len(stackExp) > 0):
+                left1 = stackExp.pop()
+            else:
+                if(s2=="*" or s2=="/"):
+                    left1=Num(1)
+                else:
+                    left1=Num(0)
             if s2=="/":
                 stackExp.append(Div(left1, right1))
                 
@@ -130,4 +136,4 @@ def parser(expression)->Double:
                 stackExp.append(Minus(left1, right1))
                 
 
-    return Double(math.floor((stackExp.pop().calc() * 1000)) / 1000);
+    return float(math.floor((stackExp.pop().calc() * 1000)) / 1000);
